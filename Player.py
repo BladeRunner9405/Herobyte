@@ -30,12 +30,17 @@ def load_image(name, color_key=None):
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, sheet_calm, sheet_walk, columns_calm, rows_calm, columns_walk, rows_walk, x, y):
+    def __init__(self, sheet_calm, sheet_walk, sheet_run,
+                 columns_calm, rows_calm,
+                 columns_walk, rows_walk,
+                 columns_run, rows_run, x, y):
         super().__init__(all_sprites)
         self.calm_frames = self.cut_sheet(sheet_calm, columns_calm, rows_calm)
         self.walk_frames = self.cut_sheet(sheet_walk, columns_walk, rows_walk)
+        self.run_frames = self.cut_sheet(sheet_run, columns_run, rows_run)
         self.cur_calm_frame = 0
         self.cur_walk_frame = 0
+        self.cur_run_frame = 0
         self.image = self.calm_frames[self.cur_calm_frame]
         self.rect = self.rect.move(x, y)
         self.look = 1
@@ -56,10 +61,19 @@ class Player(pygame.sprite.Sprite):
             self.look = 1
         else:
             self.look = -1
-
         if self.look == -1:
             self.image = pygame.transform.flip(self.image, True, False)
+        self.rect = self.rect.move(feet, 0)
 
+    def run(self, feet):
+        self.cur_run_frame = (self.cur_run_frame + 1) % len(self.run_frames)
+        self.image = self.run_frames[self.cur_run_frame]
+        if feet > 0:
+            self.look = 1
+        else:
+            self.look = -1
+        if self.look == -1:
+            self.image = pygame.transform.flip(self.image, True, False)
         self.rect = self.rect.move(feet, 0)
 
     def update(self, event):
@@ -71,17 +85,24 @@ class Player(pygame.sprite.Sprite):
 
 
 running = True
-player = Player(load_image(['heroes', '2 GraveRobber', 'GraveRobber_idle.png']),
-                load_image(['heroes', '2 GraveRobber', 'GraveRobber_walk.png']), 4, 1, 6, 1, 50, 50)
+player = Player(load_image(['heroes', '1 Woodcutter', 'Woodcutter_idle.png']),
+                load_image(['heroes', '1 Woodcutter', 'Woodcutter_walk.png']),
+                load_image(['heroes', '1 Woodcutter', 'Woodcutter_run.png']), 4, 1, 6, 1, 6, 1, 50, 50)
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
     if pygame.key.get_pressed()[pygame.K_d]:
-        player.go(5)
+        if pygame.key.get_pressed()[pygame.K_LSHIFT ]:
+            player.run(10)
+        else:
+            player.go(5)
     if pygame.key.get_pressed()[pygame.K_a]:
-        player.go(-5)
+        if pygame.key.get_pressed()[pygame.K_LSHIFT]:
+            player.run(-10)
+        else:
+            player.go(-5)
 
     screen.fill(pygame.Color("black"))
     all_sprites.draw(screen)
