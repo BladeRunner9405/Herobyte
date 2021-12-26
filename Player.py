@@ -4,8 +4,8 @@ import pygame
 pygame.init()
 
 FPS = 10
-WIDTH = 600
-HEIGHT = 400
+WIDTH = 600  # 25 платформ
+HEIGHT = 408  # 17 платформ
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
@@ -106,11 +106,21 @@ class Player(pygame.sprite.Sprite):
             self.attack()
 
 
+# class Level(pygame.sprite.Sprite):
+#     def __init__(self, level_name):
+#         super().__init__(all_sprites)
+#         self.image = Mountain.image
+#         self.rect = self.image.get_rect()
+#         # вычисляем маску для эффективного сравнения
+#         self.mask = pygame.mask.from_surface(self.image)
+#         # располагаем горы внизу
+#         self.rect.bottom = height
+
 running = True
-player = Player(load_image(['heroes', '1 Woodcutter', 'Woodcutter_idle.png']),
-                load_image(['heroes', '1 Woodcutter', 'Woodcutter_walk.png']),
-                load_image(['heroes', '1 Woodcutter', 'Woodcutter_run.png']),
-                load_image(['heroes', '1 Woodcutter', 'Woodcutter_attack3.png']), 4, 1, 6, 1, 6, 1, 6, 1, 50, 50)
+player = Player(load_image(['heroes', 'Woodcutter', 'Woodcutter_idle.png']),
+                load_image(['heroes', 'Woodcutter', 'Woodcutter_walk.png']),
+                load_image(['heroes', 'Woodcutter', 'Woodcutter_run.png']),
+                load_image(['heroes', 'Woodcutter', 'Woodcutter_attack3.png']), 4, 1, 6, 1, 6, 1, 6, 1, 50, 50)
 
 while running:
     for event in pygame.event.get():
