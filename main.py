@@ -150,7 +150,7 @@ class Platform(pygame.sprite.Sprite):
     def __init__(self, type, x, y):
         super().__init__(all_sprites)
         self.image = load_image(
-            ['levels', 'level_' + str(LEVEL), 'platform_' + '_'.join([str(LEVEL), str(type)]) + '.png'])
+            ['levels', 'level_' + str(LEVEL), 'platform_' + str(type) + '.png'])
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.rect.move(x * 24, y * 24)
@@ -159,18 +159,18 @@ class Platform(pygame.sprite.Sprite):
 class Level:
     def __init__(self, level_map):
         self.level_map = load_level(level_map)
-        for y in range(17):
-            for x in range(25):
-                if int(self.level_map[y][x]) and int(self.level_map[y][x]) != 9:
+        for y in range(len(self.level_map)):
+            for x in range(len(self.level_map[0])):
+                if self.level_map[y][x] == '1' or self.level_map[y][x] == '2':
                     obstacles.append(Platform(self.level_map[y][x], x, y))
-                elif int(self.level_map[y][x]) == 9:
+                elif self.level_map[y][x] == '@':
                     global player
-                    player = Player(random.choice(players), [4, 1], [6, 1], [6, 1], [6, 1], [6, 1], [x * 24, y * 24 - 23], 100, 25)
+                    player = Player(random.choice(players), [4, 1], [6, 1], [6, 1], [6, 1], [6, 1], [y * 24, x * 24 - 23], 100, 25)
 
 obstacles = []
 players = ['Woodcutter', 'GraveRobber', 'SteamMan']
 player = None
-level_1 = Level(['levels', 'level_1', 'main_level_1.txt'])
+level_1 = Level(['levels', 'level_1', 'main_map.txt'])
 running = True
 while running:
     for event in pygame.event.get():
